@@ -34,3 +34,15 @@ export const completeJob = async (req: Request, res: Response) => {
 
   res.json(result.rows[0]);
 };
+
+export const startIndirect = async (req: Request, res: Response) => {
+  const jobId = req.params.id;
+  const startTime = new Date();
+
+  const query =
+    "INSERT INTO indirect_periods (job_id, start_time) VALUES ($1, $2) RETURNING *";
+
+  const result = await pool.query(query, [jobId, startTime]);
+
+  res.json(result.rows[0]);
+};

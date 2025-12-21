@@ -1,6 +1,6 @@
 import express from "express";
 import pool from "./db";
-import { createJob, completeJob } from "./routes";
+import { createJob, completeJob, startIndirect } from "./routes";
 
 // Test DB Connection
 pool.query("SELECT NOW()", (err, res) => {
@@ -27,6 +27,8 @@ app.get("/", (req, res) => {
 app.post("/api/jobs", createJob);
 
 app.patch("/api/jobs/:id/complete", completeJob);
+
+app.post("/api/jobs/:id/start", startIndirect);
 
 // Listen call
 app.listen(port, () => {
