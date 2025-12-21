@@ -1,6 +1,12 @@
 import express from "express";
 import pool from "./db";
-import { createJob, completeJob, startIndirect } from "./routes";
+import {
+  createJob,
+  completeJob,
+  startIndirect,
+  stopIndirect,
+  getActiveJob,
+} from "./routes";
 
 // Test DB Connection
 pool.query("SELECT NOW()", (err, res) => {
@@ -20,15 +26,16 @@ app.use(express.json());
 const port: number = 3000;
 
 // Routes
-app.get("/", (req, res) => {
-  res.json({ message: "Job Tracker API is Running" });
-});
 
 app.post("/api/jobs", createJob);
 
 app.patch("/api/jobs/:id/complete", completeJob);
 
-app.post("/api/jobs/:id/start", startIndirect);
+app.post("/api/jobs/:id/indirect/start", startIndirect);
+
+app.post("/api/jobs/:id/indirect/stop", stopIndirect);
+
+app.get("/api/jobs/active", getActiveJob);
 
 // Listen call
 app.listen(port, () => {
