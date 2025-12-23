@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import pool from "./db";
 import {
   createJob,
@@ -19,6 +20,12 @@ pool.query("SELECT NOW()", (err, res) => {
 
 // Initialize express engine
 const app: express.Application = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  }),
+);
 
 app.use(express.json());
 
