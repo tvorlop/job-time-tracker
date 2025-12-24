@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "./api";
+import "./App.css";
 
 // Job types
 interface Job {
@@ -42,6 +43,8 @@ function App() {
       } else {
         await api.stopIndirect(activeJob.id);
         setIsIndirect(false);
+        const updatedJob = await api.getActiveJob();
+        setActiveJob(updatedJob);
       }
     }
   };
@@ -58,31 +61,41 @@ function App() {
   return (
     <div>
       <h1>Job Time Tracker</h1>
+      <div className="job-container">
+        <label>{isMpMode ? "Scan MP Number" : "Scan Coil ID"}</label>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => {
+            setInputValue(e.target.value);
+            handleInput(e.target.value);
+          }}
+          placeholder={isMpMode ? "e.g. MP78010xxxx" : "e.g. 7810xxxxx"}
+        />
 
-      <label>{isMpMode ? "Scan MP Number" : "Scan Coil ID"}</label>
-      <input
-        type="text"
-        value={inputValue}
-        onChange={(e) => {
-          setInputValue(e.target.value);
-          handleInput(e.target.value);
-        }}
-        placeholder={isMpMode ? "e.g. MP78010xxxx" : "e.g. 7810xxxxx"}
-      />
-
-      {activeJob ? (
-        <div>
-          <p>Current Job: {activeJob.mp_number}</p>
-          <p>Started: {new Date(activeJob.start_time).toLocaleTimeString()}</p>
-        </div>
-      ) : (
-        <p>No active job</p>
-      )}
-      {activeJob && (
-        <button onClick={handleIndirect}>
-          {isIndirect ? "Stop Indirect Time" : "Start Indirect Time"}
-        </button>
-      )}
+        {activeJob ? (
+          <div className="output">
+            <p>Current Job: {activeJob.mp_number}</p>
+            <p>
+              Started: {new Date(activeJob.start_time).toLocaleTimeString()}
+            </p>
+            <p>Indirect Time: {activeJob.indirect_time_hours} hours</p>
+            {activeJob.total_time_hours && (
+              <p>Total Time: {activeJob.total_time_hours} hours</p>
+            )}
+          </div>
+        ) : (
+          <p>No active job</p>
+        )}
+        {activeJob && (
+          <button
+            className={isIndirect ? "stop-btn" : ""}
+            onClick={handleIndirect}
+          >
+            {isIndirect ? "Stop Indirect Time" : "Start Indirect Time"}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
