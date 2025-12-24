@@ -1,4 +1,6 @@
-const API_URL = "http://localhost:3000/api";
+const API_URL = import.meta.env.PROD
+  ? "https://job-tracker-api-of5n.onrender.com/api"
+  : "http://localhost:3000/api";
 
 export const api = {
   // POST created job
