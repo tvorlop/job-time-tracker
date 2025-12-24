@@ -29,7 +29,8 @@ function App() {
     } else {
       if (value.length === 9 && value.startsWith("781")) {
         await api.completeJob(activeJob!.id, value);
-        setActiveJob(null);
+        const completedJob = await api.completeJob(activeJob!.id, value);
+        setActiveJob(completedJob);
         setInputValue("");
       }
     }
